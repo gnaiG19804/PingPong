@@ -30,35 +30,5 @@ class modePvP(gameMode):
         if keys[pg.K_s]:  # Di chuyển vợt trái xuống
             self.playerLeft.move_down()
 
-    def update(self):
-        result = self.ball.update()  # Gọi update một lần duy nhất
-        self.score.update(result)
 
-        # Vẽ nền (background) lên màn hình trước khi vẽ các đối tượng khác
-        self.window.blit(self.background, (0, 0))  # Vẽ ảnh nền tại vị trí (0,0)
 
-        # Hiển thị vật thể trên màn hình
-        self.playerLeft.show(self.window)
-        self.playerRight.show(self.window)
-        self.ball.display(self.window)
-
-        # Kiểm tra nếu bóng ra khỏi bàn
-        if result != 0:
-            self.ball.reset("left" if result == 1 else "right")
-
-        # Kiểm tra va chạm với vợt
-        self.check()
-
-        self.display_score()
-        pg.display.update()
-
-    def check(self):
-        if self.ball.getRect().colliderect(self.playerLeft.getRect()):
-            self.ball.hit()
-            self.ball.posx = self.playerLeft.x + PADDING_WIDTH + self.ball.radius
-        if self.ball.getRect().colliderect(self.playerRight.getRect()):
-            self.ball.hit()
-            self.ball.posx = self.playerRight.x - self.ball.radius
-
-    def display_score(self):
-        self.score.display_score(self.window)

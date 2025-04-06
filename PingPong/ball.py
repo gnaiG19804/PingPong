@@ -20,7 +20,7 @@ class Ball:
         self.image = pg.image.load("PingPong/images/ball.png")
         
         # Điều chỉnh kích thước của bóng
-        self.image = pg.transform.scale(self.image, (self.radius * 4.2, self.radius * 4.2))
+        self.image = pg.transform.scale(self.image, (self.radius * 4.5, self.radius * 4.5))
 
         # Xoay bóng theo góc hiện tại
         self.image = pg.transform.rotate(self.image, self.angle)
@@ -30,7 +30,6 @@ class Ball:
         surface.blit(self.image, self.rect.topleft)
 
     def update(self):
-        """ Cập nhật vị trí và góc quay của bóng """
         self.posx += self.speed * self.xFac
         self.posy += self.speed * self.yFac
 
@@ -41,16 +40,15 @@ class Ball:
         if self.posy <= 0 or self.posy >= WINDOW_HEIGHT:
             self.yFac *= -1
 
-        # Nếu bóng đi ra khỏi màn chơi
-        if self.posx <= 0 and self.firstTime:
+        # Nếu bóng đi ra khỏi màn chơi (thêm vùng đệm 10px)
+        if self.posx <= -10 and self.firstTime:  # Adjusted buffer zone
             self.firstTime = False
             return 1  # Người chơi bên phải ghi điểm
-        elif self.posx >= WINDOW_WIDTH and self.firstTime:
+        elif self.posx >= WINDOW_WIDTH + 10 and self.firstTime:  # Adjusted buffer zone
             self.firstTime = False
             return -1  # Người chơi bên trái ghi điểm
 
         return 0  # Nếu chưa ra ngoài thì không tính điểm
-
 
     def reset(self, last_winner):
         self.posx = WINDOW_WIDTH // 2
@@ -61,12 +59,26 @@ class Ball:
 
         # Hướng Y ngẫu nhiên
         self.yFac = random.choice([-1, 1])
-        self.firstTime = True
-        self.speed = 3
+        self.firstTime = True  # Reset lại biến firstTime
+        print("reset ball")
+        print(self.speed)
+        self.speed = 5  # Đặt lại tốc độ bóng
 
     def hit(self):
         self.xFac *= -1  # Đảo hướng khi chạm vào vợt
         self.speed *= 1.1  # Tăng tốc độ bóng sau mỗi làn chạm
+        max_speed = 25
+        if self.speed > max_speed:
+            self.speed = max_speed
+
+        # Reset firstTime to prevent premature reset
+        self.firstTime = True
+
+        # Điều chỉnh lại vị trí bóng để tránh tình trạng "dính" vợt
+        if self.xFac > 0:
+            self.posx = self.posx + PADDING_WIDTH + self.radius  # Sau khi đỡ bóng
+        else:
+            self.posx = self.posx - self.radius  # Sau khi đỡ bóng
 
     def getRect(self):
         return pg.Rect(self.posx - self.radius, self.posy - self.radius, self.radius * 2, self.radius * 2)

@@ -26,12 +26,13 @@ class gameMode:
         pass
 
     def update(self):
-        """Cập nhật trạng thái của game."""
-        result = self.ball.update()  # Cập nhật vị trí và trạng thái của bóng
+        result = self.ball.update()  # Gọi update một lần duy nhất
         self.score.update(result)
 
+        # Vẽ nền (background) lên màn hình trước khi vẽ các đối tượng khác
+        self.window.blit(self.background, (0, 0))  # Vẽ ảnh nền tại vị trí (0,0)
+
         # Hiển thị vật thể trên màn hình
-        self.window.fill(BLACK)  # Xóa màn hình để vẽ lại
         self.playerLeft.show(self.window)
         self.playerRight.show(self.window)
         self.ball.display(self.window)
@@ -47,14 +48,15 @@ class gameMode:
         pg.display.update()
 
     def check(self):
-        """Kiểm tra va chạm giữa bóng và vợt."""
+        """Kiểm tra va chạm giữa bóng và các vợt"""
         if self.ball.getRect().colliderect(self.playerLeft.getRect()):
             self.ball.hit()
             self.ball.posx = self.playerLeft.x + PADDING_WIDTH + self.ball.radius
-        
+
         if self.ball.getRect().colliderect(self.playerRight.getRect()):
             self.ball.hit()
             self.ball.posx = self.playerRight.x - self.ball.radius
+
 
     def display_score(self):
         """Hiển thị điểm số lên màn hình."""

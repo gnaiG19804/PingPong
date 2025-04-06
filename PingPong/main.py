@@ -1,6 +1,8 @@
 import pygame as pg
 from define import *
 from modePvP import *
+from modePvE import * 
+from modeEvE import *  # Thêm import modeEvE
 from menu import Menu  # Thêm import menu
 
 pg.init()
@@ -15,7 +17,11 @@ if mode == "PVP":
     game = modePvP(WINDOW_GAME)
     game.setup()
 elif mode == "PvE":
-    # Chế độ này có thể bỏ qua nếu chưa có
+    game = modePvE(WINDOW_GAME)
+    game.setup()
+elif mode == "AIvsAI":
+    game = modeEvE(WINDOW_GAME)
+    game.setup()
     pass
 else:
     pg.quit()
