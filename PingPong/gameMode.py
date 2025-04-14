@@ -5,6 +5,7 @@ from score import Score
 from ball import Ball
 import random
 
+
 class gameMode:
     def __init__(self, window):
         self.window = window
@@ -12,6 +13,7 @@ class gameMode:
         self.playerRight = Player(GREEN, WINDOW_WIDTH - PADDING_WIDTH, WINDOW_HEIGHT / 2 - PADDING_HEIGHT / 2)
         self.score = Score()
         self.ball = Ball(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, 7, 3, WHITE)
+        self.last_winner = None  # Biến để lưu người thắng trong lần trước
 
     def setup(self):
         """Khởi tạo bóng với hướng ngẫu nhiên."""
@@ -61,3 +63,13 @@ class gameMode:
     def display_score(self):
         """Hiển thị điểm số lên màn hình."""
         self.score.display_score(self.window)
+
+    def reset_game(self):
+        self.score.left_score = 0
+        self.score.right_score = 0
+        self.ball.reset("left" if self.last_winner == -1 else "right")
+        self.playerLeft.y = self.playerRight.y = (WINDOW_HEIGHT - PADDING_HEIGHT) // 2
+
+
+    def game_over(self):
+        pass

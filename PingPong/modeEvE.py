@@ -8,7 +8,7 @@ class modeEvE(gameMode):
     def __init__(self, window):
         super().__init__(window)
         self.window = window
-        self.background = pg.image.load("PingPong/images/background.jpg")
+        self.background = pg.image.load("PingPong/images/background.png")
         self.background = pg.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
         # Khởi tạo 2 AI riêng biệt

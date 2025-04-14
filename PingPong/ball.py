@@ -17,7 +17,7 @@ class Ball:
     def display(self, surface):
         """ Hiển thị bóng với hiệu ứng quay """
         # Load hình ảnh bóng
-        self.image = pg.image.load("PingPong/images/ball.png")
+        self.image = pg.image.load("PingPong/images/test.png")
         
         # Điều chỉnh kích thước của bóng
         self.image = pg.transform.scale(self.image, (self.radius * 4.5, self.radius * 4.5))
@@ -39,8 +39,7 @@ class Ball:
         # Nếu bóng chạm cạnh trên hoặc dưới -> Đảo hướng Y
         if self.posy <= 0 or self.posy >= WINDOW_HEIGHT:
             self.yFac *= -1
-
-        # Nếu bóng đi ra khỏi màn chơi (thêm vùng đệm 10px)
+            
         if self.posx <= -10 and self.firstTime:  # Adjusted buffer zone
             self.firstTime = False
             return 1  # Người chơi bên phải ghi điểm
@@ -54,10 +53,8 @@ class Ball:
         self.posx = WINDOW_WIDTH // 2
         self.posy = WINDOW_HEIGHT // 2
 
-        # Bóng đi về phía người vừa ghi điểm
         self.xFac = 1 if last_winner == "left" else -1
 
-        # Hướng Y ngẫu nhiên
         self.yFac = random.choice([-1, 1])
         self.firstTime = True  # Reset lại biến firstTime
         print("reset ball")
@@ -70,11 +67,8 @@ class Ball:
         max_speed = 25
         if self.speed > max_speed:
             self.speed = max_speed
-
-        # Reset firstTime to prevent premature reset
         self.firstTime = True
 
-        # Điều chỉnh lại vị trí bóng để tránh tình trạng "dính" vợt
         if self.xFac > 0:
             self.posx = self.posx + PADDING_WIDTH + self.radius  # Sau khi đỡ bóng
         else:
