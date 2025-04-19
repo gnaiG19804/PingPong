@@ -26,7 +26,15 @@ menu_image = pg.image.load(os.path.join(PATH_IMAGES, "menu.jpg"))
 PADDING_WIDTH = 20
 PADDING_HEIGHT = 100
 PADDING_LINE = 10
-PADDING_Y = 7.5 
+PADDING_Y = 10
+def set_padding_y(value):
+    global PADDING_Y
+    PADDING_Y = value
+
+def get_padding_y():
+    return PADDING_Y
+# Đích
+MAX_SCORE = 5
 
 BALL_SIZE = 20
 BALL_X = 20

@@ -1,6 +1,7 @@
 import pygame as pg
 import random
 from define import *  # Đảm bảo các hằng số như WINDOW_WIDTH, WINDOW_HEIGHT, v.v.
+from setting import sound_manager
 
 class Ball:
     def __init__(self, posx, posy, radius, speed, color):
@@ -13,11 +14,12 @@ class Ball:
         self.yFac = -1
         self.firstTime = True
         self.angle = 0  # Góc quay ban đầu của bóng
+        
 
     def display(self, surface):
         """ Hiển thị bóng với hiệu ứng quay """
         # Load hình ảnh bóng
-        self.image = pg.image.load("PingPong/images/test.png")
+        self.image = pg.image.load("PingPong/images/ball.png")
         
         # Điều chỉnh kích thước của bóng
         self.image = pg.transform.scale(self.image, (self.radius * 4.5, self.radius * 4.5))
@@ -39,7 +41,8 @@ class Ball:
         # Nếu bóng chạm cạnh trên hoặc dưới -> Đảo hướng Y
         if self.posy <= 0 or self.posy >= WINDOW_HEIGHT:
             self.yFac *= -1
-            
+
+        # Nếu bóng đi ra khỏi màn chơi (thêm vùng đệm 10px)
         if self.posx <= -10 and self.firstTime:  # Adjusted buffer zone
             self.firstTime = False
             return 1  # Người chơi bên phải ghi điểm
@@ -49,12 +52,25 @@ class Ball:
 
         return 0  # Nếu chưa ra ngoài thì không tính điểm
 
-    def reset(self, last_winner):
+    def reset_game(self):
+        sound_manager.play_score()
         self.posx = WINDOW_WIDTH // 2
         self.posy = WINDOW_HEIGHT // 2
 
+        # Hướng Y ngẫu nhiên
+        self.yFac = random.choice([-1, 1])
+        self.firstTime = True  # Reset lại biến firstTime
+        self.speed = 5  # Đặt lại tốc độ bón
+
+    def reset(self, last_winner):
+        sound_manager.play_score()
+        self.posx = WINDOW_WIDTH // 2
+        self.posy = WINDOW_HEIGHT // 2
+
+        # Bóng đi về phía người vừa ghi điểm
         self.xFac = 1 if last_winner == "left" else -1
 
+        # Hướng Y ngẫu nhiên
         self.yFac = random.choice([-1, 1])
         self.firstTime = True  # Reset lại biến firstTime
         print("reset ball")
@@ -63,12 +79,15 @@ class Ball:
 
     def hit(self):
         self.xFac *= -1  # Đảo hướng khi chạm vào vợt
-        self.speed *= 1.1  # Tăng tốc độ bóng sau mỗi làn chạm
+        self.speed *= 1.1 
+        sound_manager.play_hit();
         max_speed = 25
         if self.speed > max_speed:
             self.speed = max_speed
+
         self.firstTime = True
 
+        # Điều chỉnh lại vị trí bóng để tránh tình trạng "dính" vợt
         if self.xFac > 0:
             self.posx = self.posx + PADDING_WIDTH + self.radius  # Sau khi đỡ bóng
         else:

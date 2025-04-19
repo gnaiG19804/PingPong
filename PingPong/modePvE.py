@@ -5,8 +5,6 @@ from define import *
 from player import Player
 from AI import AI
 
-WIN_SCORE = 1 
-
 class modePvE(gameMode):
     def __init__(self, window):
         super().__init__(window)
@@ -14,12 +12,11 @@ class modePvE(gameMode):
         self.background = pg.image.load("PingPong/images/background.png")
         self.background = pg.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
-
         self.ai = AI(GREEN, WINDOW_WIDTH - PADDING_WIDTH, WINDOW_HEIGHT / 2 - PADDING_HEIGHT / 2)
-        self.playerLeft = Player(RED, 0, WINDOW_HEIGHT / 2 - PADDING_HEIGHT / 2)  
-        self.playerRight = self.ai  
-    def setup(self):
+        self.playerLeft = Player(RED, 0, WINDOW_HEIGHT / 2 - PADDING_HEIGHT / 2)
+        self.playerRight = self.ai  # dùng chung để dễ gọi lại sau này
 
+    def setup(self):
         a = random.randint(0, 1)
         if a == 0:
             self.ball.reset("left")
@@ -29,13 +26,13 @@ class modePvE(gameMode):
     def key_event(self):
         keys = pg.key.get_pressed()
         if keys[pg.K_w]:
-            self.playerLeft.move_up() 
+            self.playerLeft.move_up()
         if keys[pg.K_s]:
-            self.playerLeft.move_down()  
+            self.playerLeft.move_down()
 
     def update(self):
-        result = self.ball.update() 
-        self.window.blit(self.background, (0, 0))  
+        result = self.ball.update()
+        self.window.blit(self.background, (0, 0))
 
         self.playerLeft.show(self.window)
         self.ai.show(self.window)
@@ -45,15 +42,11 @@ class modePvE(gameMode):
             self.ball.reset("left" if result == 1 else "right")
 
         self.check()
-
-
-        self.ai.auto_move(self.ball)  
-
+        self.ai.auto_move(self.ball)
         self.display_score()
         pg.display.update()
 
     def check(self):
-
         if self.ball.getRect().colliderect(self.playerLeft.getRect()):
             self.ball.hit()
             self.ball.posx = self.playerLeft.x + PADDING_WIDTH + self.ball.radius
@@ -62,20 +55,10 @@ class modePvE(gameMode):
             self.ball.hit()
             self.ball.posx = self.ai.x - self.ball.radius
 
-    def ai_move(self):
-        self.ai.auto_move(self.ball)
-
     def game_over(self):
         font = pg.font.Font(None, 64)
-
-        if self.score.left_score >= WIN_SCORE:
-            winner = "Player Wins!" 
-            self.last_winner = 0  
-        elif self.score.right_score >= WIN_SCORE:
-            winner = "AI Wins!" 
-            self.last_winner = 1 
-        else:
-            return True 
+        winner = "You Win!" if self.score.left_score >= 1 else "AI Wins!"
+        self.last_winner = -1 if self.score.left_score >= 1 else 1
 
         small_font = pg.font.Font(None, 36)
 
@@ -89,7 +72,7 @@ class modePvE(gameMode):
                     elif exit_rect.collidepoint(event.pos):
                         return False
 
-            text_surface = font.render(winner, True, (255, 105, 180)) 
+            text_surface = font.render(winner, True, (255, 105, 180))
             text_rect = text_surface.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 100))
             self.window.blit(text_surface, text_rect)
 

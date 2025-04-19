@@ -13,7 +13,7 @@ class Score:
             self.right_score += 1  # Người bên phải ghi điểm
         elif result == -1:
             self.left_score += 1  # Người bên trái ghi điểm
-    
+
     def display_score(self, surface):
         """Hiển thị điểm lên màn hình."""
         font = pg.font.Font(None, 36)

@@ -29,8 +29,6 @@ class modePvP(gameMode):
             self.playerLeft.move_up()
         if keys[pg.K_s]:  # Di chuyển vợt trái xuống
             self.playerLeft.move_down()
-
-
     def game_over(self):
         font = pg.font.Font(None, 64)
         winner = "Player left Wins!" if self.score.left_score >= 5 else "Player right Wins!"
@@ -65,3 +63,5 @@ class modePvP(gameMode):
             self.window.blit(exit_text, exit_text.get_rect(center=exit_rect.center))
 
             pg.display.flip()
+
+
