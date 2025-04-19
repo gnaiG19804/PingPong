@@ -1,5 +1,7 @@
 import pygame as pg
 from define import *
+from sound import SettingsScreen  # Import màn hình settings
+from setting import sound_manager
 
 class Menu:
     def __init__(self, window):
@@ -9,7 +11,7 @@ class Menu:
         self.button_height = 50
         self.button_color = RED
         self.background = pg.transform.scale(menu_image, (WINDOW_WIDTH, WINDOW_HEIGHT))  # Thay đổi kích thước hình nền cho phù hợp
-    
+        self.sound_manager = sound_manager
 
     def draw_text(self, text, x, y, color=WHITE):
         """ Hiển thị chữ lên màn hình """
@@ -20,7 +22,7 @@ class Menu:
         """ Vẽ nút và chữ trên nút """
         pg.draw.rect(self.window, self.button_color, (x, y, self.button_width, self.button_height))
         self.draw_text(text, x + (self.button_width - self.font.size(text)[0]) // 2, y + (self.button_height - self.font.get_height()) // 2)  # Căn giữa chữ
-
+    
     def display(self):
         run_menu = True
         while run_menu:
@@ -48,12 +50,16 @@ class Menu:
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:  # 1 là chuột trái
                     mouse_x, mouse_y = event.pos
                     if button_x <= mouse_x <= button_x + self.button_width and 200 <= mouse_y <= 200 + self.button_height:
-                        return "PVP"
+                        return "PvP"
                     elif button_x <= mouse_x <= button_x + self.button_width and 270 <= mouse_y <= 270 + self.button_height:
                         return "PvE"
                     elif button_x <= mouse_x <= button_x + self.button_width and 340 <= mouse_y <= 340 + self.button_height:
-                        return "AIvsAI"
+                        return "AI vs AI"
                     elif button_x <= mouse_x <= button_x + self.button_width and 410 <= mouse_y <= 410 + self.button_height:
                         return "Rankings"
                     elif button_x <= mouse_x <= button_x + self.button_width and 480 <= mouse_y <= 480 + self.button_height:
-                        return "Settings"
+                        settings_screen = SettingsScreen(self.window, sound_manager)
+                        result = settings_screen.show()
+                        if result in ["Back", "Confirm"]:
+                           continue  # Quay lại menu sau khi điều chỉnh
+                    

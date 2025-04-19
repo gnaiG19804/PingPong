@@ -12,13 +12,11 @@ class modePvE(gameMode):
         self.background = pg.image.load("PingPong/images/background.jpg")
         self.background = pg.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
-        # Thay thế playerRight bằng AI
         self.ai = AI(GREEN, WINDOW_WIDTH - PADDING_WIDTH, WINDOW_HEIGHT / 2 - PADDING_HEIGHT / 2)
-        self.playerLeft = Player(RED, 0, WINDOW_HEIGHT / 2 - PADDING_HEIGHT / 2)  # Thêm người chơi trái
-        self.playerRight = self.ai  # AI thay thế người chơi phải
+        self.playerLeft = Player(RED, 0, WINDOW_HEIGHT / 2 - PADDING_HEIGHT / 2)
+        self.playerRight = self.ai  # dùng chung để dễ gọi lại sau này
 
     def setup(self):
-        """Khởi tạo lại bóng sau mỗi lần ghi điểm"""
         a = random.randint(0, 1)
         if a == 0:
             self.ball.reset("left")
@@ -26,49 +24,68 @@ class modePvE(gameMode):
             self.ball.reset("right")
 
     def key_event(self):
-        """Xử lý sự kiện bàn phím cho người chơi trái"""
         keys = pg.key.get_pressed()
         if keys[pg.K_w]:
-            self.playerLeft.move_up()  # Di chuyển lên
+            self.playerLeft.move_up()
         if keys[pg.K_s]:
-            self.playerLeft.move_down()  # Di chuyển xuống
+            self.playerLeft.move_down()
 
     def update(self):
-        """Cập nhật trò chơi mỗi vòng"""
-        result = self.ball.update()  # Cập nhật vị trí bóng
-        self.window.blit(self.background, (0, 0))  # Vẽ nền
+        result = self.ball.update()
+        self.window.blit(self.background, (0, 0))
 
-        # Vẽ các đối tượng
         self.playerLeft.show(self.window)
         self.ai.show(self.window)
         self.ball.display(self.window)
 
-        # Nếu ghi điểm, reset bóng
         if result != 0:
             self.ball.reset("left" if result == 1 else "right")
 
-        # Kiểm tra va chạm
         self.check()
-
-        # Di chuyển AI
-        self.ai.auto_move(self.ball)  # AI xử lý di chuyển
-
-        # Hiển thị điểm số
+        self.ai.auto_move(self.ball)
         self.display_score()
         pg.display.update()
 
     def check(self):
-        """Kiểm tra va chạm giữa bóng và các vợt"""
-        # Kiểm tra va chạm với playerLeft
         if self.ball.getRect().colliderect(self.playerLeft.getRect()):
             self.ball.hit()
             self.ball.posx = self.playerLeft.x + PADDING_WIDTH + self.ball.radius
 
-        # Kiểm tra va chạm với AI (playerRight)
         if self.ball.getRect().colliderect(self.ai.getRect()):
             self.ball.hit()
             self.ball.posx = self.ai.x - self.ball.radius
 
-    def ai_move(self):
-        """Di chuyển AI theo bóng"""
-        self.ai.auto_move(self.ball)
+    def game_over(self):
+        font = pg.font.Font(None, 64)
+        winner = "You Win!" if self.score.left_score >= 1 else "AI Wins!"
+        self.last_winner = -1 if self.score.left_score >= 1 else 1
+
+        small_font = pg.font.Font(None, 36)
+
+        while True:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    return False
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    if play_again_rect.collidepoint(event.pos):
+                        return True
+                    elif exit_rect.collidepoint(event.pos):
+                        return False
+
+            text_surface = font.render(winner, True, (255, 105, 180))
+            text_rect = text_surface.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 100))
+            self.window.blit(text_surface, text_rect)
+
+            play_again_rect = pg.Rect(WINDOW_WIDTH // 2 - 120, WINDOW_HEIGHT // 2, 240, 50)
+            exit_rect = pg.Rect(WINDOW_WIDTH // 2 - 120, WINDOW_HEIGHT // 2 + 70, 240, 50)
+
+            pg.draw.rect(self.window, (50, 200, 120), play_again_rect, border_radius=10)
+            pg.draw.rect(self.window, (200, 50, 50), exit_rect, border_radius=10)
+
+            play_text = small_font.render("Play Again", True, (255, 255, 255))
+            exit_text = small_font.render("Exit to Menu", True, (255, 255, 255))
+
+            self.window.blit(play_text, play_text.get_rect(center=play_again_rect.center))
+            self.window.blit(exit_text, exit_text.get_rect(center=exit_rect.center))
+
+            pg.display.flip()

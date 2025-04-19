@@ -3,6 +3,7 @@ from define import *
 from player import Player
 from score import Score
 from ball import Ball
+from setting import sound_manager
 import random
 
 class gameMode:
@@ -50,14 +51,24 @@ class gameMode:
     def check(self):
         """Kiểm tra va chạm giữa bóng và các vợt"""
         if self.ball.getRect().colliderect(self.playerLeft.getRect()):
+            sound_manager.play_hit()
             self.ball.hit()
             self.ball.posx = self.playerLeft.x + PADDING_WIDTH + self.ball.radius
+            
 
         if self.ball.getRect().colliderect(self.playerRight.getRect()):
+            sound_manager.play_hit()
             self.ball.hit()
             self.ball.posx = self.playerRight.x - self.ball.radius
+            
 
 
     def display_score(self):
         """Hiển thị điểm số lên màn hình."""
         self.score.display_score(self.window)
+    
+    def reset_game(self):
+        self.score.left_score = 0
+        self.score.right_score = 0
+        self.ball.reset("left" if self.last_winner == -1 else "right")
+        self.playerLeft.y = self.playerRight.y = (WINDOW_HEIGHT - PADDING_HEIGHT) // 2
