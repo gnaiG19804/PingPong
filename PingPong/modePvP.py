@@ -8,7 +8,14 @@ class modePvP(gameMode):
     def __init__(self, window):
         super().__init__(window)
         self.window = window  # Sửa lại đúng tên biến là self.window
-        self.background = pg.image.load("PingPong/images/background.png")  # Tải ảnh nền
+        
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Tạo đường dẫn tới hình nền
+        bg_path = os.path.join(base_dir, "images", "background.png")
+
+        # Tải và scale hình nền
+        self.background = pg.image.load(bg_path).convert()
         self.background = pg.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
     def setup(self):

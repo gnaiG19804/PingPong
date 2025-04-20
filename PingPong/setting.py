@@ -27,8 +27,12 @@ class SoundManager:
                 self.score_sound = pygame.mixer.Sound(os.path.join(sound_path,"score.wav"))
                 self.score_sound.set_volume(self.volume)
                 
+                self.winAi = pygame.mixer.Sound(os.path.join(sound_path,"win1.wav"))
+                self.winAi.set_volume(self.volume)
+
                 pygame.mixer.music.load(os.path.join(sound_path, "background_music.mp3"))
                 pygame.mixer.music.set_volume(self.volume)
+
             except pygame.error as e:
                 print(f"[Sound Error] {e}")
                 self.hit_sound = None
@@ -50,6 +54,10 @@ class SoundManager:
     def play_win(self):
         if self.sound_enabled and self.win_sound:
             self.win_sound.play()
+
+    def player_win(self):
+        if self.sound_enabled and self.winAi:
+            self.winAi.play()
 
     def play_lose(self):
         if self.sound_enabled and self.lose_sound:

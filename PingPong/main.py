@@ -30,7 +30,6 @@ while True:
     menu = Menu(WINDOW_GAME)
     mode = menu.display()  # Nhận chuỗi: "PvP", "PvE", "AI vs AI"
     # mode = mode.strip().capitalize() if mode else None
-    print("Giá trị nhận từ menu:", repr(mode))
 
 
     if mode is None:
@@ -101,7 +100,7 @@ while True:
                     game.reset_game()
         elif mode == "PvE":
             if game.score.left_score >= 1 or game.score.right_score >= 10000:
-                sound_manager.play_lose()
+                sound_manager.player_win()
                 play_again = game.game_over()
                 run = play_again
                 if play_again:

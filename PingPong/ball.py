@@ -18,8 +18,14 @@ class Ball:
 
     def display(self, surface):
         """ Hiển thị bóng với hiệu ứng quay """
+        # Lấy đường dẫn tuyệt đối tới file hiện tại
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Tạo đường dẫn chính xác tới ảnh bóng
+        ball_path = os.path.join(base_dir, "images", "ball.png")
+
         # Load hình ảnh bóng
-        self.image = pg.image.load("PingPong/images/ball.png")
+        self.image = pg.image.load(ball_path)
         
         # Điều chỉnh kích thước của bóng
         self.image = pg.transform.scale(self.image, (self.radius * 4.5, self.radius * 4.5))

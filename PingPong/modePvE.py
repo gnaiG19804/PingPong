@@ -9,7 +9,13 @@ class modePvE(gameMode):
     def __init__(self, window):
         super().__init__(window)
         self.window = window
-        self.background = pg.image.load("PingPong/images/background.png")
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Tạo đường dẫn tới hình nền
+        bg_path = os.path.join(base_dir, "images", "background.png")
+
+        # Tải và scale hình nền
+        self.background = pg.image.load(bg_path).convert()
         self.background = pg.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
         self.ai = AI(GREEN, WINDOW_WIDTH - PADDING_WIDTH, WINDOW_HEIGHT / 2 - PADDING_HEIGHT / 2)
@@ -31,6 +37,10 @@ class modePvE(gameMode):
             self.playerLeft.move_up()  # Di chuyển playerLeft lên
         if keys[pg.K_s]:  # Nếu phím 'S' được nhấn
             self.playerLeft.move_down()  # Di chuyển playerLeft xuống
+        if keys[pg.K_UP]:  # Di chuyển vợt phải lên
+            self.playerLeft.move_up()
+        if keys[pg.K_DOWN]:  # Di chuyển vợt phải xuống
+            self.playerLeft.move_down()
 
 
     def update(self):
@@ -63,9 +73,9 @@ class modePvE(gameMode):
 
     def game_over(self):
         font = pg.font.Font(None, 64)
-        winner = "You Win!" if self.score.left_score >= 1 else "AI Wins!"
+        winner = "You Win!" if self.score.left_score >= 10000 else "AI Wins!"
         self.last_winner = -1 if self.score.left_score >= 1 else 1
-
+        
         small_font = pg.font.Font(None, 36)
 
         while True:

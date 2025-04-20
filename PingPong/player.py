@@ -10,7 +10,13 @@ class Player:
         self.color = color
         
         # Tải hình ảnh paddle cơ bản
-        self.base_image = pg.image.load("PingPong/images/paddle.png").convert_alpha()
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Ghép đường dẫn đến hình ảnh paddle.png
+        image_path = os.path.join(base_dir, "images", "paddle.png")
+
+        # Tải hình ảnh paddle
+        self.base_image = pg.image.load(image_path).convert_alpha()
         self.base_image = pg.transform.scale(self.base_image, (PADDING_WIDTH, PADDING_HEIGHT))
         
         # Tạo các hiệu ứng bổ sung
