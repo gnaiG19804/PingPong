@@ -24,14 +24,18 @@ class modePvE(gameMode):
             self.ball.reset("right")
 
     def key_event(self):
-        keys = pg.key.get_pressed()
-        if keys[pg.K_w]:
-            self.playerLeft.move_up()
-        if keys[pg.K_s]:
-            self.playerLeft.move_down()
+        keys = pg.key.get_pressed()  # Lấy tất cả các phím đã nhấn
+        if keys[pg.K_v]:  # Nếu phím 'V' được nhấn
+            self.ai.reverse()  # Đảo ngược trạng thái stop của AI
+        if keys[pg.K_w]:  # Nếu phím 'W' được nhấn
+            self.playerLeft.move_up()  # Di chuyển playerLeft lên
+        if keys[pg.K_s]:  # Nếu phím 'S' được nhấn
+            self.playerLeft.move_down()  # Di chuyển playerLeft xuống
+
 
     def update(self):
         result = self.ball.update()
+        self.score.update(result)
         self.window.blit(self.background, (0, 0))
 
         self.playerLeft.show(self.window)
@@ -40,6 +44,8 @@ class modePvE(gameMode):
 
         if result != 0:
             self.ball.reset("left" if result == 1 else "right")
+            if(self.ai.stop==True):
+                self.ai.reverse()
 
         self.check()
         self.ai.auto_move(self.ball)

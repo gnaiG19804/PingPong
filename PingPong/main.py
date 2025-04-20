@@ -100,7 +100,7 @@ while True:
                 if play_again:
                     game.reset_game()
         elif mode == "PvE":
-            if game.score.left_score >= 1 or game.score.right_score >= 1:
+            if game.score.left_score >= 1 or game.score.right_score >= 10000:
                 sound_manager.play_lose()
                 play_again = game.game_over()
                 run = play_again

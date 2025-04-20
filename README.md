@@ -13,7 +13,8 @@
 Để chạy được dự án này, bạn cần Python và một số thư viện. Các thư viện cần thiết là:
 
 - pygame
-
+- random
+- math
 Nếu bạn chưa cài đặt các thư viện này, bạn có thể cài đặt chúng bằng lệnh sau:
 
 ```bash

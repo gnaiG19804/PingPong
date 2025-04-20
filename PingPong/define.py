@@ -21,12 +21,12 @@ PATH_IMAGES = os.path.join(PATH_IMAGES, "images/")
 # Tải các hình ảnh
 # background = pg.image.load(os.path.join(PATH_IMAGES, "background.jpg"))
 # ball_image = pg.image.load(os.path.join(PATH_IMAGES, "ball.jpg"))
-menu_image = pg.image.load(os.path.join(PATH_IMAGES, "menu.jpg"))
+menu_image = pg.image.load(os.path.join(PATH_IMAGES, "1.png"))
 # Biến
 PADDING_WIDTH = 20
 PADDING_HEIGHT = 100
 PADDING_LINE = 10
-PADDING_Y = 10
+PADDING_Y = 15
 def set_padding_y(value):
     global PADDING_Y
     PADDING_Y = value
